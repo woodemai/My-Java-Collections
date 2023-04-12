@@ -96,15 +96,6 @@ public class MySinglyLinkedList<T> implements Iterable<T> {
         this.size = 0;
     }
 
-    public Node<T> getHead() {
-        return getNode(0);
-    }
-
-
-    public Node<T> getTail() {
-        return getNode(size() - 1);
-    }
-
     public void add(int index, T value) {
         if (index == 0) {
             addFirst(value);
@@ -157,6 +148,15 @@ public class MySinglyLinkedList<T> implements Iterable<T> {
         return current;
     }
 
+    public Node<T> getHead() {
+        return getNode(0);
+    }
+
+
+    public Node<T> getTail() {
+        return getNode(size() - 1);
+    }
+
     public T get(int index) {
         return getNode(index).getValue();
     }
@@ -191,6 +191,14 @@ public class MySinglyLinkedList<T> implements Iterable<T> {
             prev.next = current.next;
             size--;
         }
+    }
+
+    public T getFirst() {
+        return getNode(0).getValue();
+    }
+
+    public T getLast() {
+        return getNode(size() - 1).getValue();
     }
 
     public void removeFirst() {
