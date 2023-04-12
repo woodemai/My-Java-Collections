@@ -1,9 +1,10 @@
 # My-Java-Collections
-My implementations of Java Collections 
+
+My implementations of Java Collections
 
 | Collection       | Implemented        |
 |------------------|--------------------|
-| SinglyLinkedList | :white-check-mark: |
+| SinglyLinkedList | :white_check_mark: |
 | DoublyLinkedList | :x:                |
-| Queue            | :x:                |
+| LinkedListQueue  | :white_check_mark: |
 | PriorityQueue    | :x:                |
