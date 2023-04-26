@@ -21,6 +21,11 @@ public class MyLinkedListQueue<T> {
         }
 
     }
+    private static class QueueException extends Exception {
+        public QueueException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 
     private Node<T> head = null;
     private Node<T> tail = null;
@@ -56,14 +61,14 @@ public class MyLinkedListQueue<T> {
         size++;
     }
 
-    public T element() throws Exception {
+    public T element() throws QueueException {
         if (size() == 0) {
-            throw new Exception("Queue is empty");
+            throw new QueueException("Queue is empty");
         }
         return head.value;
     }
 
-    public T remove() throws Exception {
+    public T remove() throws QueueException {
         T result = element();
         head = head.next;
         size--;
