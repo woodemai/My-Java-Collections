@@ -8,3 +8,9 @@ My implementations of Java Collections
 | DoublyLinkedList | :x:                |
 | LinkedListQueue  | :white_check_mark: |
 | PriorityQueue    | :x:                |
+| SimpleTree       | :x:                |
+| BinaryTree       | :white_check_mark: |
+| BinarySearchTree | :x:                |
+| AVL Tree         | :x:                |
+| Black Red Tree   | :x:                |
+
