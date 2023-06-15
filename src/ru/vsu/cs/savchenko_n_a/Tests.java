@@ -1,4 +1,6 @@
-package ru.vsu.cs.savchenko_n_a.mycollections;
+package ru.vsu.cs.savchenko_n_a;
+
+import ru.vsu.cs.savchenko_n_a.collections.list.MySinglyLinkedList;
 
 public class Tests {
     public static void main(String[] args) {

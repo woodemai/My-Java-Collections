@@ -1,4 +1,4 @@
-package ru.vsu.cs.savchenko_n_a.mycollections;
+package ru.vsu.cs.savchenko_n_a.collections.queue;
 
 public class MyLinkedListQueue<T> {
 

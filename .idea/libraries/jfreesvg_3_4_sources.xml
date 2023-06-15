@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jfreesvg-3.4-sources">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jfreesvg-3.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/jfreesvg-3.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
