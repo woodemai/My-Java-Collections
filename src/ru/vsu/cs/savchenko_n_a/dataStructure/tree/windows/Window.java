@@ -2,6 +2,8 @@ package ru.vsu.cs.savchenko_n_a.dataStructure.tree.windows;
 
 import ru.vsu.cs.savchenko_n_a.dataStructure.tree.binaryTree.BinaryTree;
 import ru.vsu.cs.savchenko_n_a.dataStructure.tree.binaryTree.BinaryTreePainter;
+import ru.vsu.cs.savchenko_n_a.dataStructure.tree.nonBinaryTree.SimpleTree;
+import ru.vsu.cs.savchenko_n_a.dataStructure.tree.nonBinaryTree.SimpleTreePainter;
 import ru.vsu.cs.savchenko_n_a.utils.SwingUtils;
 
 import javax.swing.*;
@@ -12,10 +14,15 @@ public class Window extends JFrame {
 
     private JPanel contentPane;
     private JPanel panelPaintArea;
+    private JTextField textFieldBrakedNotationBinaryTree;
+    private JButton buttonBuildBrakedBinaryTree;
+    private JButton buttonFindMaxElementsLevelBinaryTree;
     private JTextField textFieldBrakedNotationTree;
     private JButton buttonBuildBrakedTree;
-    private JButton buttonFindMaxElementsLevel;
-    BinaryTree<Integer> tree = new BinaryTree<>();
+    private JButton button2;
+    BinaryTree<Integer> binaryTree = new BinaryTree<>();
+    SimpleTree<Integer> simpleTree = new SimpleTree<>();
+    boolean binary = true;
     private final JPanel paintPanel;
 
 
@@ -38,7 +45,12 @@ public class Window extends JFrame {
             @Override
             public void paintComponent(Graphics gr) {
                 super.paintComponent(gr);
-                Dimension paintSize = BinaryTreePainter.paint(tree, gr);
+                Dimension paintSize;
+                if (binary) {
+                    paintSize = BinaryTreePainter.paint(binaryTree, gr);
+                } else {
+                    paintSize = SimpleTreePainter.paint(simpleTree, gr);
+                }
                 if (!paintSize.equals(this.getPreferredSize())) {
                     SwingUtils.setFixedSize(this, paintSize.width, paintSize.height);
                 }
@@ -47,31 +59,41 @@ public class Window extends JFrame {
         JScrollPane paintJScrollPane = new JScrollPane(paintPanel);
         panelPaintArea.add(paintJScrollPane);
 
+        buttonBuildBrakedBinaryTree.addActionListener(e -> {
+            try {
+                BinaryTree<Integer> tree = new BinaryTree<>(Integer::parseInt);
+                tree.fromBracketNotation(textFieldBrakedNotationBinaryTree.getText());
+                this.binaryTree = tree;
+                binary = true;
+                repaintTree();
+            } catch (Exception ex) {
+                SwingUtils.showErrorMessageBox(ex);
+            }
+        });
         buttonBuildBrakedTree.addActionListener(e -> {
             try {
-                BinaryTree<Integer> tree = new BinaryTree<>(Integer::parseInt);
+                SimpleTree<Integer> tree = new SimpleTree<>(Integer::parseInt);
                 tree.fromBracketNotation(textFieldBrakedNotationTree.getText());
-                this.tree = tree;
+                this.simpleTree = tree;
+                binary = false;
                 repaintTree();
             } catch (Exception ex) {
                 SwingUtils.showErrorMessageBox(ex);
             }
         });
-        buttonFindMaxElementsLevel.addActionListener(e -> {
+        buttonFindMaxElementsLevelBinaryTree.addActionListener(e -> {
             try {
                 BinaryTree<Integer> tree = new BinaryTree<>(Integer::parseInt);
-                tree.fromBracketNotation(textFieldBrakedNotationTree.getText());
-                this.tree = tree;
-                List<Integer> maxLevels = this.tree.findLevelsWithMaxElements();
-                this.tree.colorLevelsWithMaxElements(maxLevels);
+                tree.fromBracketNotation(textFieldBrakedNotationBinaryTree.getText());
+                this.binaryTree = tree;
+                List<Integer> maxLevels = this.binaryTree.findLevelsWithMaxElements();
+                this.binaryTree.colorLevelsWithMaxElements(maxLevels);
                 repaintTree();
             } catch (Exception ex) {
                 SwingUtils.showErrorMessageBox(ex);
             }
         });
-
     }
-
     private void repaintTree() {
         paintPanel.repaint();
     }

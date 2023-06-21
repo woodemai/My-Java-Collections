@@ -1,6 +1,7 @@
 package ru.vsu.cs.savchenko_n_a.dataStructure.tree.nonBinaryTree;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,11 @@ public interface ITree<T> extends Iterable<T> {
         default Iterator<T> iterator() {
             return new SimpleTreeIterator<>(this);
         }
+        default Color getColor() {
+            return Color.BLACK;
+        }
+
+        void setColor(Color color);
     }
 
     @Override

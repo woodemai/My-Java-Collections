@@ -9,5 +9,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="asm-3.0" level="project" />
     <orderEntry type="library" name="jfreesvg-3.4-sources" level="project" />
+    <orderEntry type="library" name="intellij.forms_rt" level="project" />
+    <orderEntry type="library" name="apache.xmlgraphics.batik.bridge" level="project" />
+    <orderEntry type="library" name="guru.nidi.graphviz.java" level="project" />
   </component>
 </module>

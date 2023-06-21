@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class BinaryTree<T> implements IBinaryTree<T> {
     private static class Node<T> implements IBinaryTree.Node<T> {
-        private T value;
+        private final T value;
         private Node<T> left;
         private Node<T> right;
         private Color color;
@@ -209,7 +209,7 @@ public class BinaryTree<T> implements IBinaryTree<T> {
                 Node<T> node = queue.poll();
                 if (node != null) {
                     if (contains) {
-                        node.setColor(Color.RED);
+                        node.setColor(Color.BLACK);
                     }
                     if (node.getLeft() != null) {
                         queue.add(node.getLeft());
