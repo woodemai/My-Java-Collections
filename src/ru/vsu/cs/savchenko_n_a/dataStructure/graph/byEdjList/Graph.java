@@ -1,4 +1,4 @@
-package ru.vsu.cs.savchenko_n_a.dataStructure.graph;
+package ru.vsu.cs.savchenko_n_a.dataStructure.graph.byEdjList;
 
 import java.util.*;
 
@@ -6,9 +6,12 @@ import java.util.*;
  * Реализация графа на основе списков смежности
  */
 public class Graph implements IGraph {
+
     private final List<List<Integer>> vEdjLists = new ArrayList<>();
     private int vertexQuantity = 0;
     private int edgeQuantity = 0;
+
+
 
     private static final Iterable<Integer> nullIterable = () -> new Iterator<>() {
         @Override

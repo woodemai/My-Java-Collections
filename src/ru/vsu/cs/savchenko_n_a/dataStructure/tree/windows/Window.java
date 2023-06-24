@@ -19,7 +19,6 @@ public class Window extends JFrame {
     private JButton buttonFindMaxElementsLevelBinaryTree;
     private JTextField textFieldBrakedNotationTree;
     private JButton buttonBuildBrakedTree;
-    private JButton button2;
     BinaryTree<Integer> binaryTree = new BinaryTree<>();
     SimpleTree<Integer> simpleTree = new SimpleTree<>();
     boolean binary = true;

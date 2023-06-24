@@ -1,4 +1,4 @@
-package ru.vsu.cs.savchenko_n_a.dataStructure.graph;
+package ru.vsu.cs.savchenko_n_a.dataStructure.graph.byEdjList;
 
 /**
  * Интерфейс для описания неориентированного графа (н-графа)

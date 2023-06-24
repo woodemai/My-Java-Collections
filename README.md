@@ -13,4 +13,5 @@ My implementations of Java Collections and Data Structures
 | BinarySearchTree | :x:                |
 | AVL Tree         | :x:                |
 | Black Red Tree   | :x:                |
+| Graph            | :white_check_mark: |
 
