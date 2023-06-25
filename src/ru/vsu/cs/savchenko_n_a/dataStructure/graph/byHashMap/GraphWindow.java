@@ -29,6 +29,9 @@ public class GraphWindow extends JFrame {
     private final JFileChooser fileChooserTxtSave = new JFileChooser();
     private JPanel panelGraph;
     private JButton buttonBuildAndGetShortestRoads;
+    private JButton buttonBuildDigraph;
+    private JButton buttonBuildWeightedGraph;
+    private JButton buttonBuildWeightedDigraph;
     private Graph graph;
 
     public GraphWindow() {
@@ -38,9 +41,7 @@ public class GraphWindow extends JFrame {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dimension = toolkit.getScreenSize();
         setSize(dimension);
-        setVisible(true);
-
-        JTableUtils.initJTableForArray(tableGraphData, 80, true, true, true, true);
+        JTableUtils.initJTableForArray(tableGraphData, 80, false, true, true, true);
 
         fileChooserTxtOpen.setCurrentDirectory(new File("./"));
         fileChooserTxtSave.setCurrentDirectory(new File("./"));
@@ -86,7 +87,49 @@ public class GraphWindow extends JFrame {
                 int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
                 if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
                 this.graph = new Graph(array);
-                panelGraphvizPainter.paint(dotToSvg(graph.toDot()));
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotGraph()));
+            } catch (ParseException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
+            } catch (IOException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка входных данных");
+            } catch (NoSuchElementException ex) {
+                SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
+            }
+        });
+        buttonBuildDigraph.addActionListener(e -> {
+            try {
+                int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
+                if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
+                this.graph = new Graph(array);
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotDigraph()));
+            } catch (ParseException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
+            } catch (IOException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка входных данных");
+            } catch (NoSuchElementException ex) {
+                SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
+            }
+        });
+        buttonBuildWeightedGraph.addActionListener(e -> {
+            try {
+                int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
+                if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
+                this.graph = new Graph(array);
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotWeightedGraph()));
+            } catch (ParseException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
+            } catch (IOException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка входных данных");
+            } catch (NoSuchElementException ex) {
+                SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
+            }
+        });
+        buttonBuildWeightedDigraph.addActionListener(e -> {
+            try {
+                int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
+                if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
+                this.graph = new Graph(array);
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotWeightedDigraph()));
             } catch (ParseException ex) {
                 SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
             } catch (IOException ex) {
@@ -99,8 +142,8 @@ public class GraphWindow extends JFrame {
             try {
                 int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
                 if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
-                this.graph = new Graph(array);
-                panelGraphvizPainter.paint(dotToSvg(graph.toDot()));
+                this.graph = new Graph(array, true);
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotWeightedGraph()));
             } catch (ParseException ex) {
                 SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
             } catch (IOException ex) {
@@ -109,6 +152,7 @@ public class GraphWindow extends JFrame {
                 SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
             }
         });
+        setVisible(true);
     }
 
     /**
