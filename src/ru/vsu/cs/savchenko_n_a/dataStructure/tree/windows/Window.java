@@ -19,6 +19,7 @@ public class Window extends JFrame {
     private JButton buttonFindMaxElementsLevelBinaryTree;
     private JTextField textFieldBrakedNotationTree;
     private JButton buttonBuildBrakedTree;
+    private JButton buttonFindMaxLeafs;
     BinaryTree<Integer> binaryTree = new BinaryTree<>();
     SimpleTree<Integer> simpleTree = new SimpleTree<>();
     boolean binary = true;
@@ -92,8 +93,20 @@ public class Window extends JFrame {
                 SwingUtils.showErrorMessageBox(ex);
             }
         });
+        buttonFindMaxLeafs.addActionListener(e -> {
+            try {
+                BinaryTree<Integer> tree = new BinaryTree<>(Integer::parseInt);
+                tree.fromBracketNotation(textFieldBrakedNotationBinaryTree.getText());
+                this.binaryTree = tree;
+                this.binaryTree.colorNodesWithMax(this.binaryTree.findMaxLeafs());
+                repaintTree();
+            } catch (Exception ex) {
+                SwingUtils.showErrorMessageBox(ex);
+            }
+        });
     }
     private void repaintTree() {
+        panelPaintArea.repaint();
         paintPanel.repaint();
     }
 }

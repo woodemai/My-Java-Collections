@@ -1,14 +1,12 @@
 package ru.vsu.cs.savchenko_n_a.dataStructure.tree.binaryTree;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Queue;
 import java.util.function.Function;
 
-public class BinaryTree<T> implements IBinaryTree<T> {
-    private static class Node<T> implements IBinaryTree.Node<T> {
+public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
+    private static class Node<T extends Comparable<T>> implements IBinaryTree.Node<T>, Comparable<Node<T>> {
         private final T value;
         private Node<T> left;
         private Node<T> right;
@@ -47,6 +45,11 @@ public class BinaryTree<T> implements IBinaryTree<T> {
         @Override
         public void setColor(Color color) {
             this.color = color;
+        }
+        @Override
+        public int compareTo(Node<T> o) {
+            return this.getValue().compareTo(o.getValue());
+
         }
     }
 
@@ -219,6 +222,47 @@ public class BinaryTree<T> implements IBinaryTree<T> {
                     }
                 }
             }
+        }
+    }
+    public ArrayList<Node<T>> findMaxLeafs() {
+        ArrayList<Node<T>> maxLeafs = new ArrayList<>();
+        if (root == null) {
+            return maxLeafs;
+        }
+        Stack<Node<T>> stack = new Stack<>();
+        stack.add(root);
+        Node<T> maxLeaf = null;
+        while (!stack.isEmpty()) {
+            Node<T> current = stack.pop();
+            if ( current.getRight() == null && current.getLeft() == null) {
+                if (maxLeaf == null) {
+                    maxLeaf = current;
+                }
+                if (current.compareTo(maxLeaf) > 0) {
+                    maxLeafs.clear();
+                    maxLeafs.add(current);
+                    maxLeaf = current;
+                } else if (current.compareTo(maxLeaf) == 0) {
+                    maxLeafs.add(current);
+                }
+            }
+            if (current.getLeft() != null) stack.add(current.getLeft());
+            if (current.getRight() != null) stack.add(current.getRight());
+        }
+        return maxLeafs;
+    }
+
+    public void colorNodesWithMax(ArrayList<Node<T>> maxes) {
+        if (root == null) {
+            return;
+        }
+        Stack<Node<T>> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            Node<T> current = stack.pop();
+            if (maxes.contains(current)) current.setColor(Color.PINK);
+            if (current.getLeft() != null) stack.add(current.getLeft());
+            if (current.getRight() != null) stack.add(current.getRight());
         }
     }
 }
