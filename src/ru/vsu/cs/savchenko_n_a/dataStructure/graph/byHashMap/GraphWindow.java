@@ -73,7 +73,7 @@ public class GraphWindow extends JFrame {
                 File file = fileChooserTxtSave.getSelectedFile();
                 try {
                     int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
-                    IOUtils.setIntArrayToFile(file, array);
+                    IOUtils.setIntMatrixToFile(file, array);
                     SwingUtils.showInfoMessageBox("Данные успешно сохранены в файл " + file.getName(), "Успех");
                 } catch (Exception exc) {
                     SwingUtils.showInfoMessageBox(

@@ -1,4 +1,4 @@
-package ru.vsu.cs.savchenko_n_a.collections.list;
+package ru.vsu.cs.savchenko_n_a.dataStructure.list;
 
 import java.util.Iterator;
 import java.util.Objects;

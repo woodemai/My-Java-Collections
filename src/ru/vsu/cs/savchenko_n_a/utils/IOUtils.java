@@ -48,7 +48,7 @@ public class IOUtils {
         return matrix;
     }
 
-    public static void setIntArrayToFile(File file, int[][] array) {
+    public static void setIntMatrixToFile(File file, int[][] array) {
         StringBuilder sb = new StringBuilder();
         try (FileWriter wr = new FileWriter(file)) {
             if (array != null) {
@@ -57,6 +57,20 @@ public class IOUtils {
                         sb.append(anInt).append(" ");
                     }
                     sb.append("\n");
+                }
+            }
+            wr.write(sb.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Не удалось записать данные в файл");
+        }
+    }
+
+    public static void setIntArrayToFile(File file, int[] array) {
+        StringBuilder sb = new StringBuilder();
+        try (FileWriter wr = new FileWriter(file)) {
+            if (array != null) {
+                for (int num : array) {
+                    sb.append(num).append(" ");
                 }
             }
             wr.write(sb.toString());
