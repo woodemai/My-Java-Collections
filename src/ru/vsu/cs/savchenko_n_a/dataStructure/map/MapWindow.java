@@ -41,6 +41,8 @@ public class MapWindow extends JFrame {
         setBounds(width / 3, height / 3, width, height);
         JTableUtils.initJTableForArray(tableLoadedArray, 80, false, true, false, true);
         JTableUtils.initJTableForArray(tableSortedArray, 80, false, true, false, true);
+        JTableUtils.initJTableForArray(tableArray, 80, false, true, false, true);
+
         setVisible(true);
 
         fileChooserTxtOpen.setCurrentDirectory(new File("./"));
