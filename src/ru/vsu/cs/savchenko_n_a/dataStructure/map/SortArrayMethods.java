@@ -3,16 +3,7 @@ package ru.vsu.cs.savchenko_n_a.dataStructure.map;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Program {
-    public static void main(String[] args) {
-        int[] arr = new int[]{5, 2, 5, 7, 2, 4, 7, 5, 4, 1, 2, 4};
-        System.out.println("Array: ");
-        showIntArr(arr);
-        arr = sortIntArray(arr);
-        System.out.println("Sorted: ");
-        showIntArr(arr);
-    }
-
+public class SortArrayMethods {
     public static int[] sortIntArray(int[] arr) {
         Map<Integer, Integer> map = setMap(arr);
         return readMap(map, arr.length);
@@ -44,6 +35,7 @@ public class Program {
         }
         return sortedArr;
     }
+
     public static int[] myMapSortIntArray(int[] arr) {
         SimpleTreeMap<Integer, Integer> map = myMapSetMap(arr);
         return myMapReadMap(map, arr.length);
@@ -74,12 +66,5 @@ public class Program {
             }
         }
         return map;
-    }
-
-    private static void showIntArr(int[] arr) {
-        for (int value : arr) {
-            System.out.print(value + " ");
-        }
-        System.out.println();
     }
 }

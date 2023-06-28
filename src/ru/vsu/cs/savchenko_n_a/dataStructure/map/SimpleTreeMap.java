@@ -1,52 +1,17 @@
 package ru.vsu.cs.savchenko_n_a.dataStructure.map;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class SimpleTreeMap<K extends Comparable<K>, V> {
     private Node<K, V> root;
-    private final Comparator<? super K> comparator;
-    public SimpleTreeMap() {
-        comparator = null;
-    }
-
-    public SimpleTreeMap(Comparator<? super K> comparator) {
-        this.comparator = comparator;
-    }
 
     private static class Node<K, V> {
         K key;
         V value;
 
-        public K getKey() {
-            return key;
-        }
-
-        public void setKey(K key) {
-            this.key = key;
-        }
-
         public V getValue() {
             return value;
-        }
-
-        public void setValue(V value) {
-            this.value = value;
-        }
-
-        public Node<K, V> getLeft() {
-            return left;
-        }
-
-        public void setLeft(Node<K, V> left) {
-            this.left = left;
-        }
-
-        public Node<K, V> getRight() {
-            return right;
-        }
-
-        public void setRight(Node<K, V> right) {
-            this.right = right;
         }
 
         Node<K, V> left, right;
@@ -85,11 +50,11 @@ public class SimpleTreeMap<K extends Comparable<K>, V> {
     }
 
     public V get(K key) {
-        Node<K,V> node = get(root, key);
+        Node<K, V> node = get(root, key);
         return node == null ? null : node.getValue();
     }
 
-    private Node<K,V> get(Node<K,V> node, K key) {
+    private Node<K, V> get(Node<K, V> node, K key) {
         if (node == null) {
             return null;
         }
@@ -115,7 +80,7 @@ public class SimpleTreeMap<K extends Comparable<K>, V> {
         return keySet(root, new TreeSet<>());
     }
 
-    private Set<K> keySet(Node<K,V> node, Set<K> keySet) {
+    private Set<K> keySet(Node<K, V> node, Set<K> keySet) {
         if (node == null) {
             return keySet;
         }

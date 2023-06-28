@@ -10,6 +10,20 @@ public class IOUtils {
     private IOUtils() {
     }
 
+    public static String getStringFromFile(String filename) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                sb.append(scanner.nextLine());
+            }
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String[][] getStringArrayFromFile(String fileName) {
         String[][] matrix = null;
 
