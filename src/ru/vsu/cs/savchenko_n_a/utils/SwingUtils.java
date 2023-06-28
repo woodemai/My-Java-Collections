@@ -14,10 +14,14 @@ import java.util.logging.Logger;
  * @author Дмитрий Соломатин (кафедра ПиИТ ФКН ВГУ)
  */
 public class SwingUtils {
+    private SwingUtils() {
+    }
+
     /**
      * Показать диалоговое окно с информационным сообщением
+     *
      * @param message Сообщение
-     * @param title Заголовок окна
+     * @param title   Заголовок окна
      */
     public static void showInfoMessageBox(String message, String title) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
@@ -154,8 +158,7 @@ public class SwingUtils {
     public static void setDefaultFont(String fontName, int size) {
         UIManager.getDefaults().entrySet().forEach((entry) -> {
             Object value = UIManager.get(entry.getKey());
-            if (value != null && value instanceof FontUIResource) {
-                FontUIResource fr = (FontUIResource) value;
+            if (value != null && value instanceof FontUIResource fr) {
                 fr = new FontUIResource(
                     (fontName != null) ? fontName : fr.getFontName(),
                     fr.getStyle(),
