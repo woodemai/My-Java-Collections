@@ -12,19 +12,18 @@ import java.util.*;
  */
 public class Graph {
     private final HashMap<Integer, Node> graph = new HashMap<>();
-    private int nodeQuantity;
-    private int edgeQuantity;
 
     public Graph(int[][] graphData) {
-        this.edgeQuantity = 0;
-        this.nodeQuantity = 0;
         createGraph(graphData);
     }
 
     public Graph(int[][] graphData, boolean withMinimumSpanningTree) {
-        this.edgeQuantity = 0;
-        this.nodeQuantity = 0;
-        createGraphWithMinimumRoads(graphData);
+        if (withMinimumSpanningTree) {
+            createGraphWithMinimumRoads(graphData);
+        } else {
+            createGraph(graphData);
+        }
+
     }
 
     /**
@@ -64,29 +63,8 @@ public class Graph {
     }
 
     /**
-     * Запись описывает ребро, являющиеся {@link Comparable Comparable}.
-     *
-     * @param adjacentNode узел, к которому привязано это ребро, то-есть узел от которого это ребро идет
-     * @param weight       вес ребра
-     */
-    private record Edge(Node adjacentNode, int weight) implements Comparable<Edge> {
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (Edge) obj;
-            return Objects.equals(this.adjacentNode, that.adjacentNode) &&
-                    this.weight == that.weight;
-        }
-
-        @Override
-        public int compareTo(Edge compareEdge) {
-            return this.weight - compareEdge.weight;
-        }
-    }
-
-    /**
      * <h3>Добавление или получение узла</h3>
+     *
      * @param value значение узла
      * @return если узел найден в графе возвращает его, если не найден, то создает новый узел и возвращает его
      */
@@ -95,12 +73,12 @@ public class Graph {
         if (graph.containsKey(value)) return graph.get(value);
         Node node = new Node(value);
         graph.put(value, node);
-        nodeQuantity++;
         return node;
     }
 
     /**
      * <h3>Создание графа из массив данных</h3>
+     *
      * @param graphData массив данных, в котором первый столбец значения узла от которого строить ребро,
      *                  второй столбец с которому и третий стоблец вес ребра, значение "-1" отсутсвие узла/ребра
      */
@@ -111,9 +89,8 @@ public class Graph {
             Node adjacentNode = addOrGetNode(row[1]);
             if (adjacentNode == null) continue;
             Edge edge = new Edge(adjacentNode, row[2]);
-            edgeQuantity++;
-            node.edges.add(edge);
-            adjacentNode.parents.put(node, edge);
+            node.getEdges().add(edge);
+            adjacentNode.getParents().put(node, edge);
         }
     }
 
@@ -130,14 +107,38 @@ public class Graph {
         for (int[] row : graphData) {
             Node node = addOrGetNode(row[0]);
             Node adjacentNode = addOrGetNode(row[1]);
-            if (adjacentNode == null || node == null || (visited.contains(node) && visited.contains(adjacentNode))) continue;
+            if (adjacentNode == null || node == null || (visited.contains(node) && visited.contains(adjacentNode)))
+                continue;
             visited.add(adjacentNode);
             visited.add(node);
             Edge edge = new Edge(adjacentNode, row[2]);
-            edgeQuantity++;
-            node.edges.add(edge);
-            adjacentNode.parents.put(node, edge);
+            node.getEdges().add(edge);
+            adjacentNode.getParents().put(node, edge);
         }
+    }
+
+    /**
+     * <h3>Список самых коротких дорог</h3>
+     * Выводит список ребер, которые составляет вместе систему путей минимальной длины, соединяющие все узлы
+     */
+    public ArrayList<Edge> findMinimumRoads() {
+        ArrayList<Edge> finalRoads = new ArrayList<>();
+        Set<Node> visited = new HashSet<>();
+        PriorityQueue<Edge> queue = new PriorityQueue<>();
+        Node startNode = graph.values().iterator().next();
+        queue.addAll(startNode.getEdges());
+        int count = 0;
+        while (!queue.isEmpty() && count < graph.size()) {
+            Edge edge = queue.poll();
+            Node adjacentNode = edge.getAdjacentNode();
+            if (!visited.contains(adjacentNode)) {
+                visited.add(adjacentNode);
+                count++;
+                finalRoads.add(edge);
+                queue.addAll(adjacentNode.getEdges());
+            }
+        }
+        return finalRoads;
     }
 
     /**
@@ -150,31 +151,18 @@ public class Graph {
         Arrays.sort(graphData, Comparator.comparingInt(row -> row[2]));
     }
 
-    public String toDotWeightedGraph() {
-        StringBuilder sb = new StringBuilder();
-        String newLine = System.lineSeparator();
-        sb.append("strict graph").append(" {").append(newLine);
-        for (Node node : graph.values()) {
-            if (!node.edges.isEmpty()) {
-                for (Edge edge : node.edges) {
-                    sb.append(node.value).append(" -- ").append(edge.adjacentNode.value).append(String.format(" [weight=%d label=%d]", edge.weight, edge.weight)).append(newLine);
-                }
-            } else {
-                sb.append(node.value).append(newLine);
-            }
-
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
+    /**
+     * <h3>Язык Dot - <strong>обычный</strong> граф</h3>
+     *
+     * @return граф в языке Dot
+     */
     public String toDotGraph() {
         StringBuilder sb = new StringBuilder();
         String newLine = System.lineSeparator();
         sb.append("strict graph").append(" {").append(newLine);
         for (Node node : graph.values()) {
-            if (!node.edges.isEmpty()) {
-                for (Edge edge : node.edges) {
+            if (!node.getEdges().isEmpty()) {
+                for (Edge edge : node.getEdges()) {
                     sb.append(node.value).append(" -- ").append(edge.adjacentNode.value).append(newLine);
                 }
             } else {
@@ -186,13 +174,64 @@ public class Graph {
         return sb.toString();
     }
 
+    /**
+     * <h3>Язык Dot - <strong>взвешенный</strong> граф</h3>
+     *
+     * @return граф в языке Dot
+     */
+    public String toDotWeightedGraph() {
+        StringBuilder sb = new StringBuilder();
+        String newLine = System.lineSeparator();
+        sb.append("strict graph").append(" {").append(newLine);
+        for (Node node : graph.values()) {
+            if (!node.getEdges().isEmpty()) {
+                for (Edge edge : node.getEdges()) {
+                    sb.append(node.value).append(" -- ").append(edge.adjacentNode.value).append(String.format(" [weight=%d label=%d]", edge.weight, edge.weight)).append(newLine);
+                }
+            } else {
+                sb.append(node.value).append(newLine);
+            }
+
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * <h3>Язык Dot - <strong>направленный</strong> граф</h3>
+     *
+     * @return граф в языке Dot
+     */
+    public String toDotDigraph() {
+        StringBuilder sb = new StringBuilder();
+        String newLine = System.lineSeparator();
+        sb.append("strict digraph").append(" {").append(newLine);
+        for (Node node : graph.values()) {
+            if (!node.getEdges().isEmpty()) {
+                for (Edge edge : node.getEdges()) {
+                    sb.append(node.value).append(" -> ").append(edge.adjacentNode.value).append(newLine);
+                }
+            } else {
+                sb.append(node.value).append(newLine);
+            }
+
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * <h3>Язык Dot - <strong>взвешенный направленный</strong> граф</h3>
+     *
+     * @return граф в языке Dot
+     */
     public String toDotWeightedDigraph() {
         StringBuilder sb = new StringBuilder();
         String newLine = System.lineSeparator();
         sb.append("strict digraph").append(" {").append(newLine);
         for (Node node : graph.values()) {
-            if (!node.edges.isEmpty()) {
-                for (Edge edge : node.edges) {
+            if (!node.getEdges().isEmpty()) {
+                for (Edge edge : node.getEdges()) {
                     sb.append(node.value).append(" -> ").append(edge.adjacentNode.value).append(String.format(" [weight=%d label=%d]", edge.weight, edge.weight)).append(newLine);
                 }
             } else {
@@ -204,21 +243,85 @@ public class Graph {
         return sb.toString();
     }
 
-    public String toDotDigraph() {
+    /**
+     * <h3>Язык Dot - <strong>взвешенный</strong> граф с выделением дорог</h3>
+     * Помимо всего прочего, здесь выделены особым цветом ребра, которые передаются в списки на входе
+     *
+     * @param selected Ребра которые необходимо выделить
+     * @return Граф в языке Dot
+     */
+    public String toDotWithImportantRoads(ArrayList<Edge> selected) {
         StringBuilder sb = new StringBuilder();
         String newLine = System.lineSeparator();
-        sb.append("strict digraph").append(" {").append(newLine);
+        sb.append("strict graph").append(" {").append(newLine);
         for (Node node : graph.values()) {
-            if (!node.edges.isEmpty()) {
-                for (Edge edge : node.edges) {
-                    sb.append(node.value).append(" -> ").append(edge.adjacentNode.value).append(newLine);
+            if (!node.getEdges().isEmpty()) {
+                for (Edge edge : node.getEdges()) {
+                    if (selected.contains(edge)) {
+                        sb.append(node.value).append(" -- ").append(edge.getAdjacentNode().value).append(String.format(" [weight=%d label=%d color=red]", edge.getWeight(), edge.getWeight()));
+                    } else if (!selected.contains(node.getParents().get(edge.getAdjacentNode()))) {
+                        sb.append(node.value).append(" -- ").append(edge.getAdjacentNode().value).append(String.format(" [weight=%d label=%d color=gray]", edge.getWeight(), edge.getWeight()));
+                    }
+                    sb.append(newLine);
                 }
             } else {
-                sb.append(node.value).append(newLine);
+                sb.append(node.getValue()).append(newLine);
             }
 
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    /**
+     * Запись описывает ребро, являющиеся {@link Comparable Comparable}.
+     */
+    private static final class Edge implements Comparable<Edge> {
+        private final Node adjacentNode;
+        private final int weight;
+
+        /**
+         * @param adjacentNode узел, к которому привязано это ребро, то-есть узел от которого это ребро идет
+         * @param weight       вес ребра
+         */
+        private Edge(Node adjacentNode, int weight) {
+            this.adjacentNode = adjacentNode;
+            this.weight = weight;
+        }
+
+        public Node getAdjacentNode() {
+            return adjacentNode;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (Edge) obj;
+            return Objects.equals(this.adjacentNode, that.adjacentNode) &&
+                    this.weight == that.weight;
+        }
+
+        @Override
+        public int compareTo(Edge compareEdge) {
+            return this.weight - compareEdge.weight;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(adjacentNode, weight);
+        }
+
+        @Override
+        public String toString() {
+            return "Edge[" +
+                    "adjacentNode=" + adjacentNode + ", " +
+                    "weight=" + weight + ']';
+        }
+
     }
 }

@@ -2,7 +2,7 @@
 
 My implementations of Java Collections and Data Structures
 
-| Collection       | Implemented        |
+| Data Structure   | Implemented        |
 |------------------|--------------------|
 | SinglyLinkedList | :white_check_mark: |
 | DoublyLinkedList | :x:                |
@@ -14,4 +14,5 @@ My implementations of Java Collections and Data Structures
 | AVL Tree         | :x:                |
 | Black Red Tree   | :x:                |
 | Graph            | :white_check_mark: |
-
+| HashMap          | :x:                | 
+| Tree Map         | :white_check_mark: | 

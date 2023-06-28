@@ -28,19 +28,19 @@ public class GraphWindow extends JFrame {
     private final JFileChooser fileChooserTxtOpen = new JFileChooser();
     private final JFileChooser fileChooserTxtSave = new JFileChooser();
     private JPanel panelGraph;
-    private JButton buttonBuildAndGetShortestRoads;
+    private JButton buttonBuildMinimumRoads;
     private JButton buttonBuildDigraph;
     private JButton buttonBuildWeightedGraph;
     private JButton buttonBuildWeightedDigraph;
+    private JButton buttonFindMinimumRoads;
     private Graph graph;
 
     public GraphWindow() {
         setTitle("Самый короткий цикл");
         setContentPane(contentPane);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Dimension dimension = toolkit.getScreenSize();
-        setSize(dimension);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(false);
         JTableUtils.initJTableForArray(tableGraphData, 80, false, true, true, true);
 
         fileChooserTxtOpen.setCurrentDirectory(new File("./"));
@@ -138,7 +138,7 @@ public class GraphWindow extends JFrame {
                 SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
             }
         });
-        buttonBuildAndGetShortestRoads.addActionListener(e -> {
+        buttonBuildMinimumRoads.addActionListener(e -> {
             try {
                 int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
                 if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
@@ -152,8 +152,23 @@ public class GraphWindow extends JFrame {
                 SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
             }
         });
+        buttonFindMinimumRoads.addActionListener(e -> {
+            try {
+                int[][] array = JTableUtils.readIntMatrixFromJTable(tableGraphData);
+                if (array == null || (array[0].length != 3)) throw new NoSuchElementException("Массив пуст");
+                this.graph = new Graph(array);
+                panelGraphvizPainter.paint(dotToSvg(graph.toDotWithImportantRoads(this.graph.findMinimumRoads())));
+            } catch (ParseException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка при чтении данных из таблицы");
+            } catch (IOException ex) {
+                SwingUtils.showInfoMessageBox("Ошибка входных данных");
+            } catch (NoSuchElementException ex) {
+                SwingUtils.showInfoMessageBox(ex.getMessage() + "\nПопробуйте еще раз");
+            }
+        });
         setVisible(true);
     }
+
 
     /**
      * @param dotSrc строка в формате dot, описывающая граф
